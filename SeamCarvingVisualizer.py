@@ -451,7 +451,7 @@ def convert_type(image, to):
 
 
 def visualize_util(vis):
-    cv2.imshow("Visualizer", vis)
+    cv2.imshow("Seam Carving Visualizer", vis)
     cv2.waitKey(1)
 
 
