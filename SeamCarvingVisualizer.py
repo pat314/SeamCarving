@@ -336,3 +336,155 @@ def add_seam(image, seam_index):
         row = row - 1
 
     return output
+
+# The seams_insertion function performs seam insertion on an image, which means it adds seams to expand the width or height of the image.
+# This process involves identifying and inserting new pixels into positions chosen based on the lowest energy seams.
+# Input Parameters:
+    # image: The original image to which seams will be added.
+    # num_of_seam: The number of seams to add.
+    # is_visualize: An optional parameter to visualize the seam insertion process (default is False).
+    # is_rotate: An optional parameter to rotate the image (default is False).
+def seams_insertion(image, num_of_seam, is_visualize=False, is_rotate=False):
+    # 1. Initialization and Finding the Lowest Energy Seams
+    seams_record = []
+    temp_image = image.copy()
+
+    operations = num_of_seam
+    while operations:
+        # Finds the lowest energy seam and its boolean mask.
+        seam_index, boolmask = get_minimum_seam(temp_image)
+        #  Visualizes the seam if needed.
+        if is_visualize:
+            visualize(temp_image, boolmask, should_rotate=is_rotate)
+        #  Stores the identified seam in seams_record.
+        seams_record.append(seam_index)
+        # Removes the seam from the temporary image.
+        temp_image = remove_seam(temp_image, boolmask)
+
+        operations = operations - 1
+
+    # 2. Reverse the Seam List
+    seams_record = seams_record[::-1]
+
+    # 3. Adding Seams Back to the Original Image
+    add = num_of_seam
+    while add:
+
+        add = add - 1
+        # Retrieves the last seam from the seams_record.
+        seam = seams_record.pop(-1)
+        # Adds the seam to the original image.
+        image = add_seam(image, seam)
+        # Visualizes the seam insertion if needed.
+        if is_visualize:
+            visualize(image, should_rotate=is_rotate)
+
+        # update the remaining seam indices
+        for remaining_seam in seams_record:
+            # Creates a condition to identify which seam indices need updating.
+            condition = remaining_seam >= seam
+            # Updates the indices of the remaining seams to account for the newly added seam.
+            remaining_seam[np.asarray(condition).nonzero()] += 2
+
+    return image
+
+@njit
+#Function to remove a specified seam from an image using a mask (optional)
+#Input Parameters:
+    #image: The original image from which the seam will be removed.
+    #mask: A boolean mask indicating which pixels are part of the seam to be removed.
+def remove_seam(image, mask):
+    # 1. Initialize Variables
+    height, width, RGB = image.shape
+    # This mask helps in identifying which pixels to keep and which to remove across all color channels.
+    boolmask_3D = np.zeros((height, width, RGB), dtype=np.bool)
+    for i in range(RGB):
+        boolmask_3D[:, :, i] = mask
+
+    # new width of the image after removing the seam.
+    new_w = width - 1
+
+    # 2. Create a new image with the seam removed
+    final_image = np.zeros((height, new_w, RGB), dtype=image.dtype)
+
+    # 3. Populate the output image by excluding the seam pixels
+    for i in range(height):
+        final_image[i, :, 0] = image[i, mask[i], 0]
+        final_image[i, :, 1] = image[i, mask[i], 1]
+        final_image[i, :, 2] = image[i, mask[i], 2]
+
+    return final_image
+
+# The seams_removal function removes a specified number of seams from an image.
+# Input Parameters:
+    # image: The original image from which the seams will be removed.
+    # num_remove: The number of seams to remove.
+    # is_visualize: An optional parameter to visualize the seam removal process (default is False).
+    # is_rotate: An optional parameter to rotate the image (default is False).
+def seams_removal(image, num_remove, is_visualize=False, is_rotate=False):
+    # 1. Iteratively Remove Seams
+    while num_remove > 0:
+        num_remove -= 1
+        # Find the minimum energy seam and its corresponding mask
+        __, mask = get_minimum_seam(image)
+        # If visualization is enabled, display the current seam
+        if is_visualize:
+            visualize(image, mask, should_rotate=is_rotate)
+        # Remove the identified seam from the image
+        image = remove_seam(image, mask)
+    return image
+
+
+######################## UTILITY CODE ########################
+
+def convert_type(image, to):
+    if to == "uint8":
+        converted = image.astype(np.uint8)
+    elif to == "float64":
+        converted = image.astype(np.float64)
+    return converted
+
+
+def visualize_util(vis):
+    cv2.imshow("Visualizer", vis)
+    cv2.waitKey(1)
+
+
+def visualize(im, mask=None, should_rotate=False):
+    visualize = convert_type(im, "uint8")
+
+    if mask is not None:
+        condition = (mask == False)
+        visualize[np.asarray(condition).nonzero()] = np.array([255, 200, 180])  # seam visualization color (BGR)
+
+    visualize = rotate_image(visualize, False)
+
+    if not should_rotate:
+        visualize = rotate_image(visualize, True)
+
+    visualize_util(visualize)
+    return visualize
+
+
+def rotate_image(image, rightward):
+    if rightward:
+        return np.rot90(image, 1)
+    else:
+        return np.rot90(image, 3)
+
+
+def resize(image, width):
+    height, width, RGB = image.shape
+    width = float(width)
+    area = height * width
+    den = area / width
+    den = int(den)
+    dim = (width, den)
+    return cv2.resize(image, dim)
+
+
+
+
+
+
+
