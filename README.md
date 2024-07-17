@@ -1,8 +1,8 @@
 # Seam Carving
-DSA Project: Seam Carving Visualizer
+
 ## I. Introduction
 
-+ This is Seam Carving Visualizer application - planned and implemented by a student in University of Engineering and Technology.
++ This is Seam Carving Visualizer application - A DSA Project planned and implemented by a student in University of Engineering and Technology.
 + The Seam Carving Visualizer application dynamically demonstrates the process of resizing images by intelligently removing or inserting seams, allowing users to see how the content-aware algorithm preserves essential visual elements while adjusting the image dimensions.
 
 ## II. What is Seam Carving?
@@ -21,15 +21,16 @@ DSA Project: Seam Carving Visualizer
   + numba
   + scipy
 + To install the required libraries, run the following command:
-+ `pip install numpy pip3 install opencv-python pip install argparse pip install numba pip install scipy`
+  `pip install numpy pip3 install opencv-python pip install argparse pip install numba pip install scipy`
 + To run the Seam Carving Visualizer application, open a File Explorer window and navigate to the directory containing the source code
 ![img_2.png](eg/img_2.png)
 + Type "cmd" in the address bar and press Enter to open a Command Prompt window in the directory
 ![img_3.png](eg/img_3.png)
 ![img_4.png](eg/img_4.png)
 + In the Command Prompt window, run the following command to execute the Seam Carving Visualizer application:
-  + `python3 SeamCarvingVisualizer.py -in <input_image_path> -out <output_image_file_name> [-dy DY] [-dx DX] [-vis]`
-    *`-im`: The path to the image to be processed.
+   `python3 SeamCarvingVisualizer.py -in <input_image_path> -out <output_image_file_name> [-dy DY] [-dx DX] [-vis]`
+
+    * `-im`: The path to the image to be processed.
     * `-out`: The name for the output image.
     * `-dy`: Number of horizontal seams to add (if positive) or subtract (if negative). Default is 0.
     * `-dx`: Number of vertical seams to add (if positive) or subtract (if negative). Default is 0.
