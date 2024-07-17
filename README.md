@@ -50,7 +50,7 @@ DSA Project: Seam Carving Visualizer
 + The idea is inspired by **Seam Carving Assignment** on **Coursera: "Algorithm II"** course.
 + The implementation references from many different sources online
 
-## VI. Contact us
+## VI. Contact me
 
 We hope that you'll enjoy Seam Carving Visualizer.
 
