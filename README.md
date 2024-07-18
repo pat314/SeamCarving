@@ -62,6 +62,6 @@ https://github.com/user-attachments/assets/8bc607ce-1ab6-4fc2-982f-2b995e483b63
 
 ## VI. Contact me
 
-We hope that you'll enjoy Seam Carving Visualizer.
+I hope that you'll enjoy Seam Carving Visualizer.
 
-[Phan Anh Tú](https://github.com/pat314)
+**[Phan Anh Tú](https://github.com/pat314)**
